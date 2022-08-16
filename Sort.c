@@ -239,7 +239,7 @@ int PartSort2(int* a, int left, int right)
 	a[hole] = key;
 	return left;
 }
-//三数取中
+//前后指针法
 int PartSort3(int* a, int left, int right)
 {
 	int mid = GetMidIndex(a, left, right);
@@ -288,7 +288,7 @@ void QuickSortNonR(int* a, int begin, int end)
 
 		int left = StackTop(&st);
 		StackPop(&st);
-		
+
 		if (left >= right)
 		{
 			continue;
