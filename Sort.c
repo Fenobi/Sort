@@ -282,17 +282,17 @@ void QuickSortNonR(int* a, int begin, int end)
 	StackPush(&st, begin);
 	StackPush(&st, end);
 	while (!StackEmpty(&st))
-	{
+{
 		int right = StackTop(&st);
 		StackPop(&st);
 
 		int left = StackTop(&st);
 		StackPop(&st);
-		
+
 		if (left >= right)
 		{
 			continue;
-		}
+}
 
 		int keyi = PartSort3(a, left, right);
 		if (keyi + 1 < right)
