@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 #include "stack.h"
 
 void print(int* a, int n);
@@ -27,3 +28,16 @@ void ShellSort(int* a, int n);
 void QuickSort(int* a, int begin, int end);
 //非递归
 void QuickSortNonR(int* a, int begin, int end);
+
+//归并排序
+//递归
+void MergeSort(int* a, int n);
+//非递归
+void MergeSortNonR(int* a, int n);
+
+//计数排序
+//适合：
+//数据范围集中
+//缺点：
+//只适合整数，不适合浮点数、字符串等
+void CountSort(int* a, int n);

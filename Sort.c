@@ -1,6 +1,15 @@
 #include "Sort.h"
 #define _CRT_SECURE_NO_WARNINGS 
 
+void print(int* a, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		printf("%d ", a[i]);
+	}
+	printf("\n");
+}
+
 void Swap(int* x, int* y)
 {
 	int tmp = *x;
@@ -282,39 +291,191 @@ void QuickSortNonR(int* a, int begin, int end)
 	StackPush(&st, begin);
 	StackPush(&st, end);
 	while (!StackEmpty(&st))
-	{
+{
 		int right = StackTop(&st);
 		StackPop(&st);
 
 		int left = StackTop(&st);
 		StackPop(&st);
 
-		if (left >= right)
-		{
-			continue;
-		}
+if (left >= right)
+{
+	continue;
+}
 
-		int keyi = PartSort3(a, left, right);
-		if (keyi + 1 < right)
-		{
-			StackPush(&st, keyi + 1);
-			StackPush(&st, right);
-		}
-		if (left < right - 1)
-		{
-			StackPush(&st, left);
-			StackPush(&st, keyi - 1);
-		}
+int keyi = PartSort3(a, left, right);
+if (keyi + 1 < right)
+{
+	StackPush(&st, keyi + 1);
+	StackPush(&st, right);
+}
+if (left < right - 1)
+{
+	StackPush(&st, left);
+	StackPush(&st, keyi - 1);
+}
 	}
 
 	StackDestroy(&st);
 }
 
-void print(int* a, int n)
+void _MergeSort(int* a, int* tmp, int begin, int end)
 {
+	if (begin >= end)
+	{
+		return;
+	}
+	int mid = (begin + end) / 2;
+
+	//递归范围[begin,mid] [mid+1,end]
+	_MergeSort(a, tmp, begin, mid);
+	_MergeSort(a, tmp, mid + 1, end);
+
+	//归并 取小的尾插
+	int begin1 = begin, end1 = mid;
+	int begin2 = mid + 1, end2 = end;
+	int i = begin;
+	while (begin1 <= end1 && begin2 <= end2)
+	{
+		if (a[begin1] <= a[begin2])
+		{
+			tmp[i++] = a[begin1++];
+		}
+		else
+		{
+			tmp[i++] = a[begin2++];
+		}
+	}
+	while (begin1 <= end1)
+	{
+		tmp[i++] = a[begin1++];
+	}
+	while (begin2 <= end2)
+	{
+		tmp[i++] = a[begin2++];
+	}
+
+	//拷贝回原数组
+	memcpy(a + begin, tmp + begin, (end - begin + 1) * sizeof(int));
+}
+
+void MergeSort(int* a, int n)
+{
+	int* tmp = (int*)malloc(n * sizeof(int));
+	if (tmp == NULL)
+	{
+		perror("malloc fail!");
+		exit(-1);
+	}
+	_MergeSort(a, tmp, 0, n - 1);
+
+	free(tmp);
+	tmp = NULL;
+}
+
+void MergeSortNonR(int* a, int n)
+{
+	int* tmp = (int*)malloc(n * sizeof(int));
+	if (tmp == NULL)
+	{
+		perror("malloc fail!");
+		exit(-1);
+	}
+	int gap = 1;
+	while (gap < n)
+	{
+		for (int j = 0; j < n; j += gap * 2)
+		{
+			int begin1 = j, end1 = j + gap - 1;
+			int begin2 = j + gap, end2 = j + 2 * gap - 1;
+
+			//第一组越界
+			if (end1 >= n)
+			{
+				break;
+			}
+
+			//第二组全部越界
+			if (begin2 >= n)
+			{
+				break;
+			}
+
+			//第二组部分越界
+			if (end2 >= n)
+			{
+				//修正end2，继续归并
+				end2 = n - 1;
+			}
+
+			int i = j;
+			while (begin1 <= end1 && begin2 <= end2)
+			{
+				if (a[begin1] <= a[begin2])
+				{
+					tmp[i++] = a[begin1++];
+				}
+				else
+				{
+					tmp[i++] = a[begin2++];
+				}
+			}
+
+			while (begin1 <= end1)
+			{
+				tmp[i++] = a[begin1++];
+			}
+			while (begin2 <= end2)
+			{
+				tmp[i++] = a[begin2++];
+			}
+
+			memcpy(a + j, tmp + j, sizeof(int)*(end2 - j + 1));
+		}
+
+		gap *= 2;
+	}
+
+	free(tmp);
+	tmp = NULL;
+}
+
+void CountSort(int* a, int n)
+{
+	int max = a[0], min = a[0];
+	for (int i = 1; i < n; i++)
+	{
+		if (a[i] > max)
+		{
+			max = a[i];
+		}
+		if (a[i] < min)
+		{
+			min = a[i];
+		}
+	}
+	int range = max - min + 1;
+	int* countA = (int*)calloc(range, sizeof(int));
+	if (countA == NULL)
+	{
+		perror("calloc fail");
+		exit(-1);
+	}
+
 	for (int i = 0; i < n; i++)
 	{
-		printf("%d ", a[i]);
+		countA[a[i] - min]++;
 	}
-	printf("\n");
+
+	int j = 0;
+	for (int i = 0; i < range; i++)
+	{
+		while (countA[i]--)
+		{
+			a[j++] = i + min;
+		}
+	}
+
+	free(countA);
 }
+
