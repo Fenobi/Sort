@@ -477,5 +477,6 @@ void CountSort(int* a, int n)
 	}
 
 	free(countA);
+	countA = NULL;
 }
 
