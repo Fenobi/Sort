@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stack.h"
+#include <time.h>
+
 
 void print(int* a, int n);
 
@@ -17,7 +19,7 @@ void InsertSort(int* a, int n);
 //ц╟ещеепР
 void BuobleSort(int* a, int n);
 
-//мфеепР
+//╤яеепР
 void HeapSort(int* a, int n);
 
 //оё╤ШеепР(╡ЕхКеепР╣дсе╩╞)
